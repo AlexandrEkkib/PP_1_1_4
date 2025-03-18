@@ -3,7 +3,7 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.*;
 
 @Entity
-@Table(name = "userKata")
+@Table(name = "usersKata")
 public class User {
     @Id
     @GeneratedValue(strategy = IDENTITY)

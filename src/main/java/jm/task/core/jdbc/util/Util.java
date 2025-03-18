@@ -2,8 +2,8 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.model.User;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,9 +15,6 @@ public class Util {
     private static final String USERNAME = "bestuser";
     private static final String PASSWORD = "bestuser";
 
-//    public static Connection getConnection() throws SQLException {
-//        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-//    }
     public static Connection getConnection() {
         Connection connection = null;
         try {
@@ -27,33 +24,42 @@ public class Util {
             }
         } catch (SQLException s) {
             System.err.println("Ошибка соединения");
+            s.printStackTrace(); // Добавлено для вывода информации об ошибке
         }
         return connection;
     }
 
-    private static SessionFactory sessionFactory = null;
-    static  {
+    private static SessionFactory sessionFactory = buildSessionFactory();
+
+    private static SessionFactory buildSessionFactory() {
         try {
             Properties settings = new Properties();
-            settings.setProperty("hibernate.connection.url", "jdbc:mysql://127.0.0.1:3306/q3_db");
-            settings.setProperty("hibernate.connection.username", "bestuser");
-            settings.setProperty("hibernate.connection.password", "bestuser");
-            settings.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
-            settings.setProperty("hibernate.hbm2ddl.auto", "create");
+            settings.setProperty("hibernate.connection.url", URL);
+            settings.setProperty("hibernate.connection.username", USERNAME);
+            settings.setProperty("hibernate.connection.password", PASSWORD);
+            settings.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 
-            sessionFactory = new org.hibernate.cfg.Configuration()
+            return new Configuration()
                     .addProperties(settings)
                     .addAnnotatedClass(User.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ExceptionInInitializerError("Initial SessionFactory creation failed." + e); // Более информативное исключение
         }
     }
-    public static Session getSession() throws HibernateException {
-        return sessionFactory.openSession();
+
+    public static SessionFactory getSessionFactory() throws HibernateException {
+        if (sessionFactory == null) {
+            throw new HibernateException("SessionFactory is not initialized.");
+        }
+        return sessionFactory;
     }
 
-    public static void close() throws HibernateException{
-        getSession().close();
+    public static void close() throws HibernateException {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
     }
 }
+

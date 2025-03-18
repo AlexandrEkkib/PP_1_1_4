@@ -14,26 +14,26 @@ public class Main {
 
         UserService userService = new UserServiceImpl();
 
-        // 1.Создание таблицы
-        userService.createUsersTable();
+//         1.Создание таблицы
+//        userService.createUsersTable();
 
 //         2.Добавление 4 пользователей
-        userService.saveUser("Alice", "Smith", (byte) 30);
-        userService.saveUser("Bob", "Brown", (byte) 25);
-        userService.saveUser("Charlie", "Davis", (byte) 28);
-        userService.saveUser("Diana", "Wilson", (byte) 22);
+//        userService.saveUser("Alice", "Smith", (byte) 30);
+//        userService.saveUser("Bob", "Brown", (byte) 25);
+//        userService.saveUser("Charlie", "Davis", (byte) 28);
+//        userService.saveUser("Diana", "Wilson", (byte) 22);
 
         // 3.Получение всех пользователей
-        List<User> users = userService.getAllUsers();
-        for (User user : users) {
-            System.out.println(user);
-        }
+//        List<User> users = userService.getAllUsers();
+//        for (User user : users) {
+//            System.out.println(user);
+//        }
 
 //         4.Очистка таблицы
-        userService.cleanUsersTable();
+//        userService.cleanUsersTable();
 
         //5. Удаление таблицы
-//        userService.dropUsersTable();
+        userService.dropUsersTable();
 
   }
 }
